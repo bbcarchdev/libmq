@@ -8,5 +8,5 @@ configure: configure.ac Makefile.am
 	autoreconf -i
 
 override_dh_auto_configure: configure
-	dh_auto_configure -- --without-included-liburi
+	dh_auto_configure
 
