@@ -1,0 +1,8 @@
+*.substvars
+*.log
+*.debhelper
+/files
+/tmp
+/libmq
+/libmq-dev
+

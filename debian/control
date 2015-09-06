@@ -1,0 +1,15 @@
+Source: libmq
+Section: net
+Priority: extra
+Maintainer: Mo McRoberts <mo.mcroberts@bbc.co.uk>
+Build-Depends: debhelper (>= 8.0.0), pkg-config, automake, autoconf, libtool
+
+Package: libmq
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: A library for interacting with message queues
+
+Package: libmq-dev
+Architecture: any
+Depends: ${misc:Depends}	
+Description: A library for interacting with message queues (development files)

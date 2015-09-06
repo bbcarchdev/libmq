@@ -1,0 +1,4 @@
+usr/lib/libmq.a
+usr/lib/libmq.la
+usr/lib/pkgconfig/libmq.pc
+usr/include/libmq.h
