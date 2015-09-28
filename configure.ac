@@ -45,6 +45,7 @@ BT_DEFINE_PREFIX
 AC_SUBST([LOCAL_LIBS])
 
 AC_CONFIG_FILES([Makefile
+m4/Makefile
 libmq.pc
 libmq-uninstalled.pc
 ])
