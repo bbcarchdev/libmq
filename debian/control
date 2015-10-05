@@ -12,5 +12,5 @@ Description: A library for interacting with message queues
 
 Package: libmq-dev
 Architecture: any
-Depends: ${misc:Depends}, libqpid-proton-dev, libssl-dev
+Depends: ${misc:Depends}, libmq (= ${binary:Version}), libqpid-proton-dev, libssl-dev
 Description: A library for interacting with message queues (development files)
