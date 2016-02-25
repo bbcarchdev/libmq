@@ -28,6 +28,8 @@ EXTRA_DIST = libmq.pc.in libmq-uninstalled.pc.in
 
 DISTCLEANFILES = libmq.pc libcluster-mq.pc
 
+SUBDIRS = queues m4
+
 pkgconfigdir = $(libdir)/pkgconfig
 
 noinst_DATA = libmq-uninstalled.pc
@@ -35,9 +37,11 @@ noinst_DATA = libmq-uninstalled.pc
 pkgconfig_DATA = libmq.pc
 
 libmq_la_SOURCES = p_libmq.h \
-	connection.c message.c proton.c
+	connection.c message.c
 
 libmq_la_LDFLAGS = -avoid-version
+
+libmq_la_LIBADD = queues/libqueues.la
 
 mq_recv_SOURCES = mq-recv.c
 mq_recv_LDADD = libmq.la
