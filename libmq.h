@@ -34,6 +34,19 @@
 typedef struct mq_connection_struct MQ;
 typedef struct mq_message_struct MQMESSAGE;
 
+typedef enum
+{
+	MQS_DISCONNECTED,
+	MQS_SEND,
+	MQS_RECV
+} MQSTATE;
+
+typedef enum
+{	
+	MQK_CREATED,
+	MQK_RECEIVED
+} MQMSGKIND;
+
 BEGIN_DECLS_
 
 /* Create a connection for receiving messages from a queue */

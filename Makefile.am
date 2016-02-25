@@ -20,7 +20,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 lib_LTLIBRARIES = libmq.la
 
-include_HEADERS = libmq.h
+include_HEADERS = libmq.h libmq-engine.h
 
 bin_PROGRAMS = mq-recv mq-send
 
