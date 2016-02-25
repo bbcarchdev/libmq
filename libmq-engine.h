@@ -35,6 +35,8 @@ BEGIN_DECLS_
 typedef struct mq_connection_impl_struct MQCONNIMPL;
 typedef struct mq_message_impl_struct MQMESSAGEIMPL;
 
+typedef MQ *(*MQCONSTRUCTOR)(const char *uri, const char *reserved1, const char *reserved2);
+
 /* Define a generic MQ structure. Individual implementations should define
  * MQ_CONNECTION_STRUCT_DEFINED before including this file and declare their
  * own struct mq_connection_struct, ensuring the first member is a pointer to
@@ -164,6 +166,11 @@ struct mq_message_impl_struct
 	/* Add a sequence of bytes to an outgoing message */
 	int (*add_bytes)(MQMESSAGE *self, unsigned char *buf, size_t buflen);
 };
+
+int mq_register(const char *scheme, MQCONSTRUCTOR construct, void *handle);
+int mq_unregister(const char *scheme, void *handle);
+int mq_unregister_constructor(MQCONSTRUCTOR construct);
+int mq_unregister_all(void *handle);
 
 END_DECLS_
 

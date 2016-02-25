@@ -24,14 +24,11 @@
 # include <stdlib.h>
 # include <string.h>
 # include <errno.h>
+# include <pthread.h>
 
 # include "libmq.h"
 # include "libmq-engine.h"
 
 MQ *mq_create_(const char *uri, const char *reserved1, const char *reserved2);
-
-# ifdef WITH_LIBQPID_PROTON
-MQ *mq_proton_construct_(const char *uri, const char *reserved1, const char *reserved2);
-# endif
 
 #endif /*!P_LIBMQ_H_*/

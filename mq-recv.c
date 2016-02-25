@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include "libmq.h"
 
@@ -42,7 +43,7 @@ main(int argc, char **argv)
 	connection = mq_connect_recv(argv[1], NULL, NULL);
 	if(!connection)
 	{
-		fprintf(stderr, "%s: cannot connect to '%s'\n", argv[0], argv[1]);
+		fprintf(stderr, "%s: cannot connect to '%s': %s\n", argv[0], argv[1], strerror(errno));
 		return 1;
 	}
 	if(mq_error(connection))
