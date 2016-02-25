@@ -165,4 +165,6 @@ struct mq_message_impl_struct
 	int (*add_bytes)(MQMESSAGE *self, unsigned char *buf, size_t buflen);
 };
 
+END_DECLS_
+
 #endif /*!LIBMQ_ENGINE_H_*/
