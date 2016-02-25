@@ -43,8 +43,8 @@ typedef enum
 
 typedef enum
 {	
-	MQK_CREATED,
-	MQK_RECEIVED
+	MQK_OUTGOING,
+	MQK_INCOMING
 } MQMSGKIND;
 
 BEGIN_DECLS_
@@ -68,6 +68,8 @@ const char *mq_errmsg(MQ *connection);
 MQMESSAGE *mq_message_create(MQ *connection);
 /* Free a created message */
 int mq_message_free(MQMESSAGE *message);
+/* Obtain the kind of a message */
+MQMSGKIND mq_message_kind(MQMESSAGE *message);
 /* Accept a message */
 int mq_message_accept(MQMESSAGE *message);
 /* Reject a message */

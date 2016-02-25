@@ -327,7 +327,7 @@ mq_proton_next_(MQ *self, MQMESSAGE **msg)
 	{
 		return -1;
 	}
-	p->kind = MQK_RECEIVED;
+	p->kind = MQK_INCOMING;
 	p->msg = pn_message();
 	if(!p->msg)
 	{
@@ -384,7 +384,7 @@ mq_proton_create_(MQ *self, MQMESSAGE **msg)
 	{
 		return -1;
 	}
-	p->kind = MQK_CREATED;
+	p->kind = MQK_OUTGOING;
 	p->msg = pn_message();
 	if(!p->msg)
 	{
@@ -425,7 +425,7 @@ static int
 mq_proton_message_accept_(MQMESSAGE *self)
 {   
 	RESET_ERROR(self->connection);
-	if(self->kind != MQK_RECEIVED || !self->msg)
+	if(self->kind != MQK_INCOMING || !self->msg)
 	{
 		SET_SYSERR(self->connection, EINVAL);
 		return -1;
@@ -442,7 +442,7 @@ static int
 mq_proton_message_reject_(MQMESSAGE *self)
 {
 	RESET_ERROR(self->connection);
-	if(self->kind != MQK_RECEIVED || !self->msg)
+	if(self->kind != MQK_INCOMING || !self->msg)
 	{
 		SET_SYSERR(self->connection, EINVAL);
 		return -1;
@@ -459,7 +459,7 @@ static int
 mq_proton_message_pass_(MQMESSAGE *self)
 {
 	RESET_ERROR(self->connection);
-	if(self->kind != MQK_RECEIVED || !self->msg)
+	if(self->kind != MQK_INCOMING || !self->msg)
 	{
 		SET_SYSERR(self->connection, EINVAL);
 		return -1;
@@ -476,7 +476,7 @@ static int
 mq_proton_message_set_type_(MQMESSAGE *self, const char *type)
 {
 	RESET_ERROR(self->connection);
-	if(self->kind != MQK_CREATED || !self->msg)
+	if(self->kind != MQK_OUTGOING || !self->msg)
 	{
 		SET_SYSERR(self->connection, EINVAL);
 		return -1;
@@ -502,7 +502,7 @@ static int
 mq_proton_message_set_subject_(MQMESSAGE *self, const char *subject)
 {
 	RESET_ERROR(self->connection);
-	if(self->kind != MQK_CREATED || !self->msg)
+	if(self->kind != MQK_OUTGOING || !self->msg)
 	{
 		SET_SYSERR(self->connection, EINVAL);
 		return -1;
@@ -532,7 +532,7 @@ mq_proton_message_set_address_(MQMESSAGE *self, const char *address)
 	int r;
 
 	RESET_ERROR(self->connection);
-	if(self->kind != MQK_CREATED || !self->msg)
+	if(self->kind != MQK_OUTGOING || !self->msg)
 	{
 		SET_SYSERR(self->connection, EINVAL);
 		return -1;
@@ -591,7 +591,7 @@ static int
 mq_proton_message_add_bytes_(MQMESSAGE *self, unsigned char *buf, size_t len)
 {
 	RESET_ERROR(self->connection);
-	if(self->kind != MQK_CREATED || !self->msg)
+	if(self->kind != MQK_OUTGOING || !self->msg)
 	{
 		SET_SYSERR(self->connection, EINVAL);
 		return -1;
@@ -618,7 +618,7 @@ static int
 mq_proton_message_send_(MQMESSAGE *self)
 {
 	RESET_ERROR(self->connection);
-	if(self->kind != MQK_CREATED || !self->msg)
+	if(self->kind != MQK_OUTGOING || !self->msg)
 	{
 		SET_SYSERR(self->connection, EINVAL);
 		return -1;

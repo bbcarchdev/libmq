@@ -23,6 +23,13 @@
 
 #include "p_libmq.h"
 
+/* Determine the kind of a message */
+MQMSGKIND
+mq_message_kind(MQMESSAGE *message)
+{
+	return message->impl->kind(message);
+}
+
 /* Accept and free a message */
 int
 mq_message_accept(MQMESSAGE *message)
