@@ -23,6 +23,7 @@
 
 #include "p_libmq.h"
 
+MQ *mq_random_construct_(const char *uri, const char *reserved1, const char *reserved2);
 # ifdef WITH_LIBQPID_PROTON
 MQ *mq_proton_construct_(const char *uri, const char *reserved1, const char *reserved2);
 # endif
@@ -173,6 +174,7 @@ mq_init_(void)
 {
 	engines = NULL;
 	enginecount = 0;
+	mq_register_internal_("random", mq_random_construct_, NULL);
 #ifdef WITH_LIBQPID_PROTON
 	mq_register_internal_("amqp", mq_proton_construct_, NULL);
 	mq_register_internal_("amqps", mq_proton_construct_, NULL);

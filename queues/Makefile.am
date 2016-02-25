@@ -19,4 +19,4 @@
 noinst_LTLIBRARIES = libqueues.la
 
 libqueues_la_SOURCES = \
-	qpid-proton.c
+	qpid-proton.c random.c
