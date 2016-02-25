@@ -37,7 +37,7 @@ noinst_DATA = libmq-uninstalled.pc
 pkgconfig_DATA = libmq.pc
 
 libmq_la_SOURCES = p_libmq.h \
-	connection.c message.c
+	engine.c connection.c message.c
 
 libmq_la_LDFLAGS = -avoid-version
 

@@ -23,8 +23,6 @@
 
 #include "p_libmq.h"
 
-static MQ *mq_create_(const char *uri, const char *reserved1, const char *reserved2);
-
 /* Create a connection for receiving messages from a queue */
 MQ *
 mq_connect_recv(const char *uri, const char *reserved1, const char *reserved2)
@@ -118,18 +116,5 @@ const char *
 mq_errmsg(MQ *connection)
 {
 	return connection->impl->errmsg(connection);
-}
-
-/* (Internal) create a new disconnected MQ connection object */
-static MQ *
-mq_create_(const char *uri, const char *reserved1, const char *reserved2)
-{   
-#ifdef WITH_LIBQPID_PROTON
-	if(!strncmp(uri, "amqp:", 5) || !strncmp(uri, "amqps:", 6))
-	{
-		return mq_proton_construct_(uri, reserved1, reserved2);
-	}
-#endif
-	return NULL;
 }
 

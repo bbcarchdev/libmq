@@ -17,21 +17,23 @@
  *  limitations under the License.
  */
 
-#ifndef P_LIBMQ_H_
-# define P_LIBMQ_H_                     1
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <errno.h>
+#include "p_libmq.h"
 
-# include "libmq.h"
-# include "libmq-engine.h"
+/* (Internal) create a new disconnected MQ connection object */
+MQ *
+mq_create_(const char *uri, const char *reserved1, const char *reserved2)
+{   
+#ifdef WITH_LIBQPID_PROTON
+	if(!strncmp(uri, "amqp:", 5) || !strncmp(uri, "amqps:", 6))
+	{
+		return mq_proton_construct_(uri, reserved1, reserved2);
+	}
+#endif
+	errno = EINVAL;
+	return NULL;
+}
 
-MQ *mq_create_(const char *uri, const char *reserved1, const char *reserved2);
-
-# ifdef WITH_LIBQPID_PROTON
-MQ *mq_proton_construct_(const char *uri, const char *reserved1, const char *reserved2);
-# endif
-
-#endif /*!P_LIBMQ_H_*/
