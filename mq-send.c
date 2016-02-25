@@ -2,7 +2,7 @@
  *
  * Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright (c) 2014 BBC
+ * Copyright (c) 2014-2015 BBC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -122,11 +122,23 @@ main(int argc, char **argv)
 		mq_message_set_type(msg, type);
 	}
 	fprintf(stderr, "%s: sending %s message '%s' to <%s>\n", progname, type, subj, argv[0]);
-	mq_message_add_bytes(msg, (unsigned char *) buffer, buflen);
-	mq_message_send(msg);
+	if(mq_message_add_bytes(msg, (unsigned char *) buffer, buflen))
+	{
+		fprintf(stderr, "%s: failed to add to outgoing message buffer: %s\n", progname, mq_errmsg(connection));
+		return 1;
+	}
+	if(mq_message_send(msg))
+	{
+		fprintf(stderr, "%s: failed to send outgoing message: %s\n", progname, mq_errmsg(connection));
+		return 1;
+	}
 
 	/* Deliver any messages in the local queue */
-	mq_deliver(connection);
+	if(mq_deliver(connection))
+	{
+		fprintf(stderr, "%s: failed to deliver pending messages: %s\n", progname, mq_errmsg(connection));
+		return 1;
+	}
 
 	/* Clean up and exit */
 	mq_message_free(msg);
