@@ -44,6 +44,8 @@ static int mq_proton_disconnect_(MQ *self);
 static int mq_proton_next_(MQ *self, MQMESSAGE **msg);
 static int mq_proton_deliver_(MQ *self);
 static int mq_proton_create_(MQ *self, MQMESSAGE **msg);
+static int mq_proton_set_cluster_(MQ *self, CLUSTER *cluster);
+static CLUSTER *mq_proton_cluster_(MQ *self);
 
 /* MQMESSAGE implementation members */
 static unsigned long mq_proton_message_release_(MQMESSAGE *self);
@@ -100,7 +102,9 @@ static MQCONNIMPL mq_proton_connection_impl_ = {
 	mq_proton_disconnect_,
 	mq_proton_next_,
 	mq_proton_deliver_,
-	mq_proton_create_
+	mq_proton_create_,
+	mq_proton_set_cluster_,
+	mq_proton_cluster_
 };
 
 static MQMESSAGEIMPL mq_proton_message_impl_ = {
@@ -394,6 +398,21 @@ mq_proton_create_(MQ *self, MQMESSAGE **msg)
 	}
 	*msg = p;
 	return 0;
+}
+
+/* Set the cluster associated with a connection */
+static int
+mq_proton_set_cluster_(MQ *self, CLUSTER *cluster)
+{
+	self->cluster = cluster;
+	return 0;
+}
+
+/* Obtain the cluster (if any) associated with a connection */
+static CLUSTER *
+mq_proton_cluster_(MQ *self)
+{
+	return self->cluster;
 }
 
 /* Release (destroy) a message */

@@ -19,7 +19,9 @@
 
 #ifndef LIBMQ_H_
 # define LIBMQ_H_                       1
+
 # include <stddef.h>
+# include <libcluster.h>
 
 # undef BEGIN_DECLS_
 # undef END_DECLS_
@@ -63,6 +65,10 @@ int mq_deliver(MQ *connection);
 int mq_error(MQ *connection);
 /* Obtain the error message for a connection */
 const char *mq_errmsg(MQ *connection);
+/* Set the cluster that this connection is part of */
+int mq_set_cluster(MQ *mq, CLUSTER *cluster);
+/* Obtain the cluster (if any) that this connection is part of */
+CLUSTER *mq_cluster(MQ *mq);
 
 /* Create a message */
 MQMESSAGE *mq_message_create(MQ *connection);

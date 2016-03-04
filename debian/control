@@ -2,7 +2,7 @@ Source: libmq
 Section: net
 Priority: extra
 Maintainer: Mo McRoberts <mo.mcroberts@bbc.co.uk>
-Build-Depends: debhelper (>= 8.0.0), pkg-config, automake, autoconf, libtool, libqpid-proton-dev, libssl-dev
+Build-Depends: debhelper (>= 8.0.0), pkg-config, automake, autoconf, libtool, libqpid-proton-dev, libssl-dev, libcluster-dev
 Standards-Version: 3.9.3
 
 Package: libmq
@@ -12,5 +12,5 @@ Description: A library for interacting with message queues
 
 Package: libmq-dev
 Architecture: any
-Depends: ${misc:Depends}, libmq (= ${binary:Version}), libqpid-proton-dev, libssl-dev
+Depends: ${misc:Depends}, libmq (= ${binary:Version}), libqpid-proton-dev, libssl-dev, libcluster-dev
 Description: A library for interacting with message queues (development files)

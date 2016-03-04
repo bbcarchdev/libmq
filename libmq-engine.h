@@ -53,7 +53,8 @@ typedef MQ *(*MQCONSTRUCTOR)(const char *uri, const char *reserved1, const char 
 	int syserr; \
 	int errcode; \
 	char *errmsg; \
-	char *uri;
+	char *uri; \
+	CLUSTER *cluster;
 
 # ifndef MQ_CONNECTION_STRUCT_DEFINED
 struct mq_connection_struct
@@ -128,6 +129,10 @@ struct mq_connection_impl_struct
 	int (*deliver)(MQ *self);
 	/* Create a new outbound message */
 	int (*create)(MQ *self, MQMESSAGE **msg);
+	/* Set the cluster that this queue is attached to */
+	int (*set_cluster)(MQ *self, CLUSTER *cluster);
+	/* Obtain the cluster that this queue is attached to, if any */
+	CLUSTER *(*cluster)(MQ *self);
 };
 
 struct mq_message_impl_struct
