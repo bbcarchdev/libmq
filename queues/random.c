@@ -41,6 +41,8 @@ static int mq_random_disconnect_(MQ *self);
 static int mq_random_next_(MQ *self, MQMESSAGE **msg);
 static int mq_random_deliver_(MQ *self);
 static int mq_random_create_(MQ *self, MQMESSAGE **msg);
+static int mq_random_set_cluster_(MQ *self, CLUSTER *cluster);
+static CLUSTER *mq_random_cluster_(MQ *self);
 
 /* MQMESSAGE implementation members */
 static unsigned long mq_random_message_release_(MQMESSAGE *self);
@@ -86,7 +88,9 @@ static MQCONNIMPL mq_random_connection_impl_ = {
 	mq_random_disconnect_,
 	mq_random_next_,
 	mq_random_deliver_,
-	mq_random_create_
+	mq_random_create_,
+	mq_random_set_cluster_,
+	mq_random_cluster_
 };
 
 static MQMESSAGEIMPL mq_random_message_impl_ = {
@@ -269,6 +273,22 @@ mq_random_create_(MQ *self, MQMESSAGE **msg)
 	SET_SYSERR(self, EINVAL);
 	return -1;
 }
+
+/* Set the cluster associated with a connection */
+static int
+mq_random_set_cluster_(MQ *self, CLUSTER *cluster)
+{
+	self->cluster = cluster;
+	return 0;
+}
+
+/* Obtain the cluster (if any) associated with a connection */
+static CLUSTER *
+mq_random_cluster_(MQ *self)
+{
+	return self->cluster;
+}
+
 
 /* Release (destroy) a message */
 static unsigned long
