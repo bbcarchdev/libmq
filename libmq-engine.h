@@ -20,6 +20,8 @@
 #ifndef LIBMQ_ENGINE_H_
 # define LIBMQ_ENGINE_H_                1
 
+# include <libmq.h>
+
 # undef BEGIN_DECLS_
 # undef END_DECLS_
 # ifdef __cplusplus
