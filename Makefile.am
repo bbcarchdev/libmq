@@ -58,7 +58,7 @@ checkout:
 		echo "+++ Checking out the latest version of $$submod on $(BRANCH)" >&2 ; \
 		cd $$submod && \
 		git checkout $(BRANCH) && \
-		git pull && \
+		git pull origin $(BRANCH) && \
 		$(MAKE) checkout BRANCH=$(BRANCH) || exit $? && \
 		cd .. ; \
 	done
