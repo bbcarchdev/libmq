@@ -73,8 +73,7 @@ mq_disconnect(MQ *connection)
 int
 mq_set_cluster(MQ *connection, CLUSTER *cluster)
 {
-	connection->impl->set_cluster(connection, cluster);
-	return 0;
+	return connection->impl->set_cluster(connection, cluster);
 }
 
 /* Create a new outgoing message */
