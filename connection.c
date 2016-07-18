@@ -69,6 +69,14 @@ mq_disconnect(MQ *connection)
 	return 0;
 }
 
+/* Set the cluster */
+int
+mq_set_cluster(MQ *connection, CLUSTER *cluster)
+{
+	connection->impl->set_cluster(connection, cluster);
+	return 0;
+}
+
 /* Create a new outgoing message */
 MQMESSAGE *
 mq_message_create(MQ *connection)
