@@ -2,7 +2,7 @@
  *
  * Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright (c) 2014-2015 BBC
+ * Copyright (c) 2014-2017 BBC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -135,6 +135,10 @@ struct mq_connection_impl_struct
 	int (*set_cluster)(MQ *self, CLUSTER *cluster);
 	/* Obtain the cluster that this queue is attached to, if any */
 	CLUSTER *(*cluster)(MQ *self);
+	/* Set the partition that this queue is associated with */
+	int (*set_partition)(MQ *self, const char *partition);
+	/* Obtain the partition that this queue is associated with */
+	const char *(*partition)(MQ *self);
 };
 
 struct mq_message_impl_struct
@@ -172,6 +176,10 @@ struct mq_message_impl_struct
 	size_t (*len)(MQMESSAGE *self);
 	/* Add a sequence of bytes to an outgoing message */
 	int (*add_bytes)(MQMESSAGE *self, unsigned char *buf, size_t buflen);
+	/* Set the partition that this message is associated with */
+	int (*set_partition)(MQMESSAGE *self, const char *partition);
+	/* Obtain the partition that this message is associated with */
+	const char *(*partition)(MQMESSAGE *self);	
 };
 
 int mq_register(const char *scheme, MQCONSTRUCTOR construct, void *handle);

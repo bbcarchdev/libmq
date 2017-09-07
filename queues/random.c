@@ -2,7 +2,7 @@
  *
  * Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright (c) 2014-2015 BBC
+ * Copyright (c) 2014-2017 BBC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,6 +43,8 @@ static int mq_random_deliver_(MQ *self);
 static int mq_random_create_(MQ *self, MQMESSAGE **msg);
 static int mq_random_set_cluster_(MQ *self, CLUSTER *cluster);
 static CLUSTER *mq_random_cluster_(MQ *self);
+static int mq_random_set_partition_(MQ *self, const char *partition);
+static const char *mq_random_partition_(MQ *self);
 
 /* MQMESSAGE implementation members */
 static unsigned long mq_random_message_release_(MQMESSAGE *self);
@@ -60,11 +62,14 @@ static const char *mq_random_message_address_(MQMESSAGE *self);
 static const unsigned char *mq_random_message_body_(MQMESSAGE *self);
 static size_t mq_random_message_len_(MQMESSAGE *self);
 static int mq_random_message_add_bytes_(MQMESSAGE *self, unsigned char *buf, size_t len);
+static int mq_random_message_set_partition_(MQMESSAGE *self, const char *partition);
+static const char *mq_random_message_partition_(MQMESSAGE *self);
 
 struct mq_connection_struct
 {
 	MQCONNIMPL *impl;
 	MQ_CONNECTION_COMMON_MEMBERS;
+	char *partition;
 };
 
 struct mq_message_struct
@@ -72,6 +77,7 @@ struct mq_message_struct
 	MQMESSAGEIMPL *impl;
 	MQ_MESSAGE_COMMON_MEMBERS;
 	char unsigned buf[32];
+	char *partition;
 };
 
 static MQCONNIMPL mq_random_connection_impl_ = {
@@ -90,7 +96,9 @@ static MQCONNIMPL mq_random_connection_impl_ = {
 	mq_random_deliver_,
 	mq_random_create_,
 	mq_random_set_cluster_,
-	mq_random_cluster_
+	mq_random_cluster_,
+	mq_random_set_partition_,
+	mq_random_partition_
 };
 
 static MQMESSAGEIMPL mq_random_message_impl_ = {
@@ -113,6 +121,8 @@ static MQMESSAGEIMPL mq_random_message_impl_ = {
 	mq_random_message_body_,
 	mq_random_message_len_,
 	mq_random_message_add_bytes_,
+	mq_random_message_set_partition_,
+	mq_random_message_partition_
 };
 
 static MQMESSAGE *mq_random_message_construct_(MQ *self);
@@ -279,6 +289,7 @@ static int
 mq_random_set_cluster_(MQ *self, CLUSTER *cluster)
 {
 	self->cluster = cluster;
+	self->impl->set_partition(self, cluster_partition(cluster));
 	return 0;
 }
 
@@ -289,6 +300,36 @@ mq_random_cluster_(MQ *self)
 	return self->cluster;
 }
 
+/* Set the name of the partition this queue uses (NULL or an empty
+ * string will unset it)
+ */
+static int
+mq_random_set_partition_(MQ *self, const char *partition)
+{
+	char *p;
+
+	if(partition && partition[0])
+	{
+		p = strdup(partition);
+		if(!p)
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		p = NULL;
+	}
+	free(self->partition);
+	self->partition = p;
+	return 0;
+}
+
+static const char *
+mq_random_partition_(MQ *self)
+{
+	return self->partition;
+}
 
 /* Release (destroy) a message */
 static unsigned long
@@ -436,6 +477,59 @@ mq_random_message_send_(MQMESSAGE *self)
 	SET_SYSERR(self->connection, EPERM);
 	return -1;
 }
+
+/* Set the partition used for a message. Note that
+ * NULL will cause the message's queue's partition to
+ * be used; an empty string will forcibly set the
+ * message to not use a partition (causing NULL
+ * to be returned by message->partition() regardless
+ * of the queue's settings).
+ */
+static int mq_random_message_set_partition_(MQMESSAGE *self, const char *partition)
+{
+	char *p;
+
+	if(partition)
+	{
+		p = strdup(partition);
+		if(!p)
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		p = NULL;
+	}
+	free(self->partition);
+	self->partition = p;
+	return 0;
+}
+
+/* If the message's partition is not set, this function
+ * is equivalent of calling the partition() method on
+ * the owning queue.
+ *
+ * If the message's partition is set to the empty string,
+ * this function will return NULL (indicating no partition)
+ *
+ * Otherwise, it will return whatever partition was set.
+ */
+
+static const char *
+mq_random_message_partition_(MQMESSAGE *self)
+{
+	if(!self->partition)
+	{
+		return self->connection->impl->partition(self->connection);
+	}
+	if(!self->partition[0])
+	{
+		return NULL;
+	}
+	return self->partition;
+}
+
 
 /* (Internal) create a new MQ message object */
 static MQMESSAGE *

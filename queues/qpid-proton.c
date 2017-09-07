@@ -46,6 +46,8 @@ static int mq_proton_deliver_(MQ *self);
 static int mq_proton_create_(MQ *self, MQMESSAGE **msg);
 static int mq_proton_set_cluster_(MQ *self, CLUSTER *cluster);
 static CLUSTER *mq_proton_cluster_(MQ *self);
+static int mq_proton_set_partition_(MQ *self, const char *partition);
+static const char *mq_proton_partition_(MQ *self);
 
 /* MQMESSAGE implementation members */
 static unsigned long mq_proton_message_release_(MQMESSAGE *self);
@@ -63,6 +65,8 @@ static const char *mq_proton_message_address_(MQMESSAGE *self);
 static const unsigned char *mq_proton_message_body_(MQMESSAGE *self);
 static size_t mq_proton_message_len_(MQMESSAGE *self);
 static int mq_proton_message_add_bytes_(MQMESSAGE *self, unsigned char *buf, size_t len);
+static int mq_proton_message_set_partition_(MQMESSAGE *self, const char *partition);
+static const char *mq_proton_message_partition_(MQMESSAGE *self);
 
 /* Internal utilities */
 static int mq_proton_disconnect_internal_(MQ *self);
@@ -104,7 +108,9 @@ static MQCONNIMPL mq_proton_connection_impl_ = {
 	mq_proton_deliver_,
 	mq_proton_create_,
 	mq_proton_set_cluster_,
-	mq_proton_cluster_
+	mq_proton_cluster_,
+	mq_proton_set_partition_,
+	mq_proton_partition_
 };
 
 static MQMESSAGEIMPL mq_proton_message_impl_ = {
@@ -127,6 +133,8 @@ static MQMESSAGEIMPL mq_proton_message_impl_ = {
 	mq_proton_message_body_,
 	mq_proton_message_len_,
 	mq_proton_message_add_bytes_,
+	mq_proton_message_set_partition_,
+	mq_proton_message_partition_
 };
 
 /* Proton message queue constructor: this is invoked by libmq to create a new
@@ -415,6 +423,26 @@ mq_proton_cluster_(MQ *self)
 	return self->cluster;
 }
 
+/* Set the partition associated with this connection */
+static int
+mq_proton_set_partition_(MQ *self, const char *partition)
+{
+	(void) self;
+	(void) partition;
+	
+	errno = EPERM;
+	return -1;
+}
+
+/* Return the connection partition */
+static const char *
+mq_proton_partition_(MQ *self)
+{
+	(void) self;
+
+	return NULL;
+}
+
 /* Release (destroy) a message */
 static unsigned long
 mq_proton_message_release_(MQMESSAGE *self)
@@ -630,6 +658,26 @@ mq_proton_message_add_bytes_(MQMESSAGE *self, unsigned char *buf, size_t len)
 		return -1;
 	}
 	return 0;
+}
+
+/* Set the partition that this message is associated with */
+static int
+mq_proton_message_set_partition_(MQMESSAGE *self, const char *partition)
+{
+	(void) self;
+	(void) partition;
+
+	errno = EPERM;
+	return -1;
+}
+
+/* Obtain the partition that this message is associated with */
+static const char *
+mq_proton_message_partition_(MQMESSAGE *self)
+{
+	(void) self;
+	
+	return NULL;
 }
 
 /* Send an outgoing message */

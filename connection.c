@@ -76,6 +76,20 @@ mq_set_cluster(MQ *connection, CLUSTER *cluster)
 	return connection->impl->set_cluster(connection, cluster);
 }
 
+/* Set the name of the partition, if any */
+int
+mq_set_partition(MQ *connection, const char *partition)
+{
+	return connection->impl->set_partition(connection, partition);
+}
+
+/* Obtain the name of the partition, if any */
+const char *
+mq_partition(MQ *connection)
+{
+	return connection->impl->partition(connection);
+}
+
 /* Create a new outgoing message */
 MQMESSAGE *
 mq_message_create(MQ *connection)

@@ -2,7 +2,7 @@
  *
  * Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright (c) 2014-2015 BBC
+ * Copyright (c) 2014-2017 BBC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -57,6 +57,10 @@ MQ *mq_connect_recv(const char *uri, const char *reserved1, const char *reserved
 MQ *mq_connect_send(const char *uri, const char *reserved1, const char *reserved2);
 /* Close a connection */
 int mq_disconnect(MQ *connection);
+/* Set the name of the partition, if any */
+int mq_set_partition(MQ *connection, const char *partition);
+/* Obtain the name of the partition, if any */
+const char *mq_partition(MQ *connection);
 /* Wait for the next message to arrive */
 MQMESSAGE *mq_next(MQ *connection);
 /* Deliver any buffered outgoing messages */
@@ -65,7 +69,9 @@ int mq_deliver(MQ *connection);
 int mq_error(MQ *connection);
 /* Obtain the error message for a connection */
 const char *mq_errmsg(MQ *connection);
-/* Set the cluster that this connection is part of */
+/* Set the cluster that this connection is part of (note that this will
+ * override any prior call to mq_set_partition())
+ */
 int mq_set_cluster(MQ *mq, CLUSTER *cluster);
 /* Obtain the cluster (if any) that this connection is part of */
 CLUSTER *mq_cluster(MQ *mq);
@@ -102,6 +108,10 @@ int mq_message_set_address(MQMESSAGE *message, const char *address);
 int mq_message_add_bytes(MQMESSAGE *message, unsigned char *bytes, size_t len);
 /* Send a message */
 int mq_message_send(MQMESSAGE *message);
+/* Override the queue's partition for an individual message */
+int mq_message_set_partition(MQMESSAGE *message, const char *partition);
+/* Obtain the message partition, if any */
+const char *mq_message_partition(MQMESSAGE *message);
 
 END_DECLS_
 

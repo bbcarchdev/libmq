@@ -2,7 +2,7 @@
  *
  * Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright (c) 2014-2015 BBC
+ * Copyright (c) 2014-2017 BBC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -132,6 +132,20 @@ int
 mq_message_add_bytes(MQMESSAGE *message, unsigned char *bytes, size_t len)
 {	
 	return message->impl->add_bytes(message, bytes, len);
+}
+
+/* Override the queue's partition for an individual message */
+int
+mq_message_set_partition(MQMESSAGE *message, const char *partition)
+{
+	return message->impl->set_partition(message, partition);
+}
+
+/* Obtain the message partition, if any */
+const char *
+mq_message_partition(MQMESSAGE *message)
+{
+	return message->impl->partition(message);
 }
 
 /* Send a message */
