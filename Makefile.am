@@ -62,3 +62,8 @@ checkout:
 		$(MAKE) checkout BRANCH=$(BRANCH) || exit $? && \
 		cd .. ; \
 	done
+
+reconf:
+	autoreconf -i && $(SHELL) ./config.status --recheck && $(SHELL) ./config.status
+
+
