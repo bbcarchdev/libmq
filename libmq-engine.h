@@ -21,6 +21,7 @@
 # define LIBMQ_ENGINE_H_                1
 
 # include <libmq.h>
+# include <sys/time.h>
 
 # undef BEGIN_DECLS_
 # undef END_DECLS_
@@ -80,7 +81,8 @@ struct mq_connection_struct
 
 # define MQ_MESSAGE_COMMON_MEMBERS \
 	MQ *connection; \
-	MQMSGKIND kind;
+	MQMSGKIND kind; \
+	struct timeval backoff;
 
 # ifndef MQ_MESSAGE_STRUCT_DEFINED
 struct mq_message_struct
@@ -90,23 +92,40 @@ struct mq_message_struct
 # endif /*!MQ_MESSAGE_STRUCT_DEFINED*/
 
 /* Reset the error state on a connection */
-# define RESET_ERROR(conn) \
+# define RESET_ERROR(conn)						\
 	conn->syserr = conn->errcode = 0;
 
 /* Set an implementation-defined error code on the connection */
-# define SET_ERROR(conn, code) \
-	conn->syserr = 0; \
+# define SET_ERROR(conn, code)					\
+	conn->syserr = 0;							\
 	conn->errcode = code;
 
 /* Set a system (errno) error code on the connection and errno */
-# define SET_SYSERR(conn, value) \
-	conn->errcode = 0; \
+# define SET_SYSERR(conn, value)				\
+	conn->errcode = 0;							\
 	conn->syserr = errno = value;
 
 /* Set the system error state on the connection to be the value of errno */
-# define SET_ERRNO(conn) \
-	conn->errcode = 0; \
+# define SET_ERRNO(conn)						\
+	conn->errcode = 0;							\
 	conn->syserr = errno;
+
+/* Check if the back-off timer has been reached, and if not set errno to
+ * EAGAIN and return -1. Intended to be used early in an mq_next()
+ * implementation.
+ */
+# define BACKOFF_CHECK(conn, timeval)			\
+	gettimeofday(&timeval, NULL);				\
+	if(!timercmp(timeval, conn->backoff, >=))	\
+	{											\
+		SET_SYSERR(conn, EAGAIN);				\
+		return -1;								\
+	}
+
+/* Set the backoff timer to n seconds in the future */
+# define BACKOFF_SECS(conn, n)	   \
+	gettimeofday(&(conn->backoff)) \
+	conn->backoff.tv_sec += n;
 
 struct mq_connection_impl_struct
 {

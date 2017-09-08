@@ -109,10 +109,12 @@ MQMESSAGE *
 mq_next(MQ *connection)
 {
 	MQMESSAGE *message;
-
+	int e;
+	
 	message = NULL;
 	if(connection->impl->next(connection, &message))
 	{
+		e = connection->impl->error(connection);
 		return NULL;
 	}
 	return message;

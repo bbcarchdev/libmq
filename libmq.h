@@ -49,7 +49,7 @@ typedef enum
 	MQK_INCOMING
 } MQMSGKIND;
 
-BEGIN_DECLS_
+BEGIN_DECLS_;
 
 /* Create a connection for receiving messages from a queue */
 MQ *mq_connect_recv(const char *uri, const char *reserved1, const char *reserved2);
@@ -113,6 +113,6 @@ int mq_message_set_partition(MQMESSAGE *message, const char *partition);
 /* Obtain the message partition, if any */
 const char *mq_message_partition(MQMESSAGE *message);
 
-END_DECLS_
+END_DECLS_;
 
 #endif /*!LIBMQ_H_*/
