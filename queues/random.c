@@ -125,7 +125,19 @@ static MQMESSAGEIMPL mq_random_message_impl_ = {
 	mq_random_message_partition_
 };
 
+MQ *mq_random_construct_(const char *uri, const char *reserved1, const char *reserved2);
 static MQMESSAGE *mq_random_message_construct_(MQ *self);
+
+int
+mq_entry(void *self)
+{
+	if(mq_register("random", mq_random_construct_, self))
+	{
+		fprintf(stderr, "MQ: random: constructor registration failed\n");
+		return -1;
+	}
+	return 0;
+}
 
 /* Random message queue constructor: this is invoked by libmq to create a new
  * Random-flavoured MQ instance

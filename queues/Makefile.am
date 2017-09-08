@@ -2,7 +2,7 @@
 ##
 ## Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
 ##
-## Copyright (c) 2014-2015 BBC
+## Copyright (c) 2014-2017 BBC
 ##
 ##  Licensed under the Apache License, Version 2.0 (the "License");
 ##  you may not use this file except in compliance with the License.
@@ -16,7 +16,14 @@
 ##  See the License for the specific language governing permissions and
 ##  limitations under the License.
 
+plugindir = $(libdir)/mq/plugins
+
+plugin_LTLIBRARIES = random.la
+
+random_la_SOURCES = random.c
+random_la_LDFLAGS = -module -no-undefined
+
 noinst_LTLIBRARIES = libqueues.la
 
 libqueues_la_SOURCES = \
-	qpid-proton.c random.c
+	qpid-proton.c

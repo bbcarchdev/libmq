@@ -2,7 +2,7 @@
  *
  * Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright (c) 2014-2015 BBC
+ * Copyright (c) 2014-2017 BBC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,12 +23,19 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <strings.h>
 # include <errno.h>
 # include <pthread.h>
+# include <dlfcn.h>
+# include <sys/types.h>
+# include <dirent.h>
 
 # include "libmq.h"
 # include "libmq-engine.h"
 
+# define PLUGINDIR                      LIBDIR "/mq/plugins"
+
 MQ *mq_create_(const char *uri, const char *reserved1, const char *reserved2);
+int mq_plugin_init_(void);
 
 #endif /*!P_LIBMQ_H_*/

@@ -32,10 +32,12 @@
 #  define END_DECLS_
 # endif
 
-BEGIN_DECLS_
+BEGIN_DECLS_;
 
 typedef struct mq_connection_impl_struct MQCONNIMPL;
 typedef struct mq_message_impl_struct MQMESSAGEIMPL;
+
+typedef int (*MQENTRY)(void *self);
 
 typedef MQ *(*MQCONSTRUCTOR)(const char *uri, const char *reserved1, const char *reserved2);
 
@@ -187,6 +189,10 @@ int mq_unregister(const char *scheme, void *handle);
 int mq_unregister_constructor(MQCONSTRUCTOR construct);
 int mq_unregister_all(void *handle);
 
-END_DECLS_
+/* Forward declaration for the plug-in entry-point */
+
+int mq_entry(void *self);
+
+END_DECLS_;
 
 #endif /*!LIBMQ_ENGINE_H_*/

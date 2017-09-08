@@ -26,7 +26,7 @@ bin_PROGRAMS = mq-recv mq-send
 
 EXTRA_DIST = libmq.pc.in libmq-uninstalled.pc.in
 
-DISTCLEANFILES = libmq.pc libcluster-mq.pc
+DISTCLEANFILES = libmq.pc libmq-uninstalled.pc
 
 SUBDIRS = queues m4
 
@@ -37,7 +37,7 @@ noinst_DATA = libmq-uninstalled.pc
 pkgconfig_DATA = libmq.pc
 
 libmq_la_SOURCES = p_libmq.h \
-	engine.c connection.c message.c
+	engine.c connection.c message.c plugin.c
 
 libmq_la_LDFLAGS = -avoid-version
 

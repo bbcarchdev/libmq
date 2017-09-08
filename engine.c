@@ -2,7 +2,7 @@
  *
  * Author: Mo McRoberts <mo.mcroberts@bbc.co.uk>
  *
- * Copyright (c) 2014-2015 BBC
+ * Copyright (c) 2014-2017 BBC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@
 
 #include "p_libmq.h"
 
-MQ *mq_random_construct_(const char *uri, const char *reserved1, const char *reserved2);
 # ifdef WITH_LIBQPID_PROTON
 MQ *mq_proton_construct_(const char *uri, const char *reserved1, const char *reserved2);
 # endif
@@ -53,7 +52,6 @@ static size_t enginecount;
 int
 mq_register(const char *scheme, MQCONSTRUCTOR construct, void *handle)
 {
-	pthread_once(&mq_init_once_, mq_init_);	
 	return mq_register_internal_(scheme, construct, handle);
 }
 
@@ -63,7 +61,6 @@ mq_unregister(const char *scheme, void *handle)
 {
 	size_t c;
 
-	pthread_once(&mq_init_once_, mq_init_);
 	pthread_rwlock_wrlock(&enginelock);
 	for(c = 0; c < enginecount; c++)
 	{
@@ -91,7 +88,6 @@ mq_unregister_constructor(MQCONSTRUCTOR construct)
 	size_t c;
 	int count;
 
-	pthread_once(&mq_init_once_, mq_init_);
 	pthread_rwlock_wrlock(&enginelock);
 	count = 0;
 	for(c = 0; c < enginecount; c++)
@@ -118,7 +114,6 @@ mq_unregister_all(void *handle)
 	size_t c;
 	int count;
 
-	pthread_once(&mq_init_once_, mq_init_);
 	pthread_rwlock_wrlock(&enginelock);
 	count = 0;
 	for(c = 0; c < enginecount; c++)
@@ -172,13 +167,11 @@ mq_create_(const char *uri, const char *reserved1, const char *reserved2)
 static void
 mq_init_(void)
 {
-	engines = NULL;
-	enginecount = 0;
-	mq_register_internal_("random", mq_random_construct_, NULL);
 #ifdef WITH_LIBQPID_PROTON
 	mq_register_internal_("amqp", mq_proton_construct_, NULL);
 	mq_register_internal_("amqps", mq_proton_construct_, NULL);
 #endif
+	mq_plugin_init_();
 }
 
 /* (Internal) register an engine */
