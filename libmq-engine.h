@@ -54,12 +54,13 @@ typedef MQ *(*MQCONSTRUCTOR)(const char *uri, const char *reserved1, const char 
  */
 
 # define MQ_CONNECTION_COMMON_MEMBERS \
-	MQSTATE state; \
-	int syserr; \
-	int errcode; \
-	char *errmsg; \
-	char *uri; \
-	CLUSTER *cluster;
+	MQSTATE state;					  \
+	int syserr;						  \
+	int errcode;					  \
+	char *errmsg;					  \
+	char *uri;						  \
+	CLUSTER *cluster;				  \
+	struct timeval backoff;
 
 # ifndef MQ_CONNECTION_STRUCT_DEFINED
 struct mq_connection_struct
@@ -80,9 +81,8 @@ struct mq_connection_struct
  */
 
 # define MQ_MESSAGE_COMMON_MEMBERS \
-	MQ *connection; \
-	MQMSGKIND kind; \
-	struct timeval backoff;
+	MQ *connection;				   \
+	MQMSGKIND kind;
 
 # ifndef MQ_MESSAGE_STRUCT_DEFINED
 struct mq_message_struct
