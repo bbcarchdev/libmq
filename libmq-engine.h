@@ -114,17 +114,17 @@ struct mq_message_struct
  * EAGAIN and return -1. Intended to be used early in an mq_next()
  * implementation.
  */
-# define BACKOFF_CHECK(conn, timeval)			\
-	gettimeofday(&timeval, NULL);				\
-	if(!timercmp(timeval, conn->backoff, >=))	\
-	{											\
-		SET_SYSERR(conn, EAGAIN);				\
-		return -1;								\
+# define BACKOFF_CHECK(conn, timeval)				\
+	gettimeofday(timeval, NULL);					\
+	if(!timercmp(timeval, &(conn->backoff), >=))	\
+	{												\
+		SET_SYSERR(conn, EAGAIN);					\
+		return -1;									\
 	}
 
 /* Set the backoff timer to n seconds in the future */
-# define BACKOFF_SECS(conn, n)	   \
-	gettimeofday(&(conn->backoff)) \
+# define BACKOFF_SECS(conn, n)					\
+	gettimeofday(&(conn->backoff), NULL);		\
 	conn->backoff.tv_sec += n;
 
 struct mq_connection_impl_struct
