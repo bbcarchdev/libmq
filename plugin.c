@@ -48,8 +48,8 @@ mq_plugin_init_(void)
 		if(errno != ENOENT || verbose)
 		{
 			fprintf(stderr, "MQ: cannot open '%s': %s\n", PLUGINDIR, strerror(errno));
-			return (errno == ENOENT ? 0 : -1);
 		}
+		return (errno == ENOENT ? 0 : -1);
 	}
 	while(!readdir_r(dir, &direntry, &de) && de)
 	{
