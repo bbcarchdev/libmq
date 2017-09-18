@@ -5,14 +5,21 @@ compiler: clang
 before_install:
 - curl https://letsencrypt.org/certs/isrgrootx1.pem.txt | sudo tee /usr/share/ca-certificates/isrgrootx1.crt
 - echo "isrgrootx1.crt" | sudo tee -a /etc/ca-certificates.conf
-- curl https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt | sudo tee /usr/share/ca-certificates/lets-encrypt-x3-cross-signed.crt
+- curl https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt | sudo tee
+  /usr/share/ca-certificates/lets-encrypt-x3-cross-signed.crt
 - echo "lets-encrypt-x3-cross-signed.crt" | sudo tee -a /etc/ca-certificates.conf
 - sudo update-ca-certificates
-- curl https://raw.githubusercontent.com/bbcarchdev/bbcarchdev-keys/main/bbcarchdev-apt.asc | sudo apt-key add -
-- echo "deb [arch=amd64] https://apt.bbcarchdev.net/debian wheezy main ports dev stage live" | sudo tee -a /etc/apt/sources.list
+- curl https://raw.githubusercontent.com/bbcarchdev/bbcarchdev-keys/main/bbcarchdev-apt.asc
+  | sudo apt-key add -
+- echo "deb [arch=amd64] https://apt.bbcarchdev.net/debian wheezy main ports dev stage
+  live" | sudo tee -a /etc/apt/sources.list
 - sudo apt-get update -qq
-- sudo apt-get install -qq libqpid-proton-dev libssl-dev libcluster-dev automake autoconf libtool pkg-config
+- sudo apt-get install -qq libqpid-proton-dev libssl-dev libcluster-dev automake autoconf
+  libtool pkg-config
 before_script:
 - autoreconf -f -i
 script:
 - ./configure && make && make check
+notifications:
+  slack:
+    secure: go4rE7RJgJ8sPOt2RfxnBwjwWUjGnlJ80KJObp63WyGOHDcMVVzqSzGyUcA1zNILJWympT+Fj6hO+aBw88yKNb7Cst2zKH88UHAVXujEyo4Q9MAyBg3xgZ9Z5dHO6M4Ypa4e5Ka0HbvxsXE3uTDFcSPy1RNOygi5yA+IaRvJ47BpbzpASBe6xOZGE7rPGlJ+8X9CSPnYft9lkOK6TAjXdTlzCyN2cVyDFeSeAyInJ/9n/1LAFC1VnxQqdapz8aKbFfxeGALfdftQFR6FAZp7u4QsGdw/o+M1B8dea3yDlehQ6TUE5JDNTT0Jo7dIIri0QWhtW5DxLC/Y2FJkXuDblCpFOCkF5Hkffo/7VC5M2mghQSqbnVgNWKNDeth44QvxtfzNHDW9Y1VqlHkG2SUdXuZoV+3mEAZkhHQHYbONIsfCN8E3YTwTl7+BY8pp8k7j6gepuJKBPwDoiggcQdLMK2o/nRCBTmTy281LOjobUJLofgs91VTHLnYQG5UoFhcCk2vzeaQWVaSerOvX0a08MihRJvdEEIWFzTzb1ULsOGAflGpuhGqbSOFeAXtaI52VSZCKz2gFpBI0kAdCFlQr7KeeMtPB3v6Mn33zEm1WjRwIznlX0yQ/D7DaWTGgSANTAo3nutZqyI0bf75gqR8Hl79b2uE2caeI7AWPLf/t8s4=
